@@ -1,4 +1,5 @@
 - [] Implement start game menu
-- [] Implement death and game over
-- [] Implement growth
-- [] Implement map bounds
+- [] Implement game over menu
+- [] Implement growth if snake eats apple
+- [] Implement death if snake eats itself
+- [] Implement death if snake breaches world border
