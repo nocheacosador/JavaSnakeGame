@@ -32,14 +32,15 @@ public class Snake {
     }
     
     private int length;
-    public int speed;
+    
+    public int speed;                           // world ticks per time tick
     public Direction direction;
     
     private final int SNAKE_WIDTH = GamePanel.CELL_SIZE / 2;
     private final int SNAKE_WIDTH_WORLD = GamePanel.toWorldSize(SNAKE_WIDTH);
     private final Color BODY_COLOR = Color.WHITE;
     
-    private ArrayList<Vector> bodyNodes;
+    private ArrayList<Vector> bodyNodes;        // in world coordinates
     
     public Snake() {
         this.length = 3;
