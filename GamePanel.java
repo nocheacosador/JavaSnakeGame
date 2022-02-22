@@ -24,12 +24,22 @@ public class GamePanel extends JPanel implements ActionListener {
 
     private Timer timer = new Timer(DELAY, this);
     private Snake snake = new Snake();
-    private Apple apple = new Apple();
+    private Apple apple = new Apple(snake);
     private long lastTimeStamp = 0;
     private long unaccountedMillis = 0;
 
     static private int map(int x, int in_min, int in_max, int out_min, int out_max) {
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+    }
+    
+    static public int toScreenSize(int x) {
+        int x_out = map(x, 0, CELL_COUNT_X * TICK_COUNT, 0, WIDTH);
+        return x_out;
+    }
+
+    static public int toWorldSize(int x) {
+        int x_out = map(x, 0, WIDTH,  0, CELL_COUNT_X * TICK_COUNT);
+        return x_out;
     }
 
     static public Coord toScreenCoords(int x, int y) {
@@ -75,10 +85,11 @@ public class GamePanel extends JPanel implements ActionListener {
         unaccountedMillis = (deltaTime + unaccountedMillis) % TIME_TICK_MILLIS;
         
         snake.update((int)ticks);
-        apple.active(snake.checkIfInside(apple.x, apple.y));
+        apple.update();
 
         this.drawBackground(g);
         snake.draw(g);
+        snake.debugDraw(g);
         apple.draw(g);
     }
 

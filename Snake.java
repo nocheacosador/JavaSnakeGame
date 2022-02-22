@@ -36,6 +36,7 @@ public class Snake {
     public Direction direction;
     
     private final int SNAKE_WIDTH = GamePanel.CELL_SIZE / 2;
+    private final int SNAKE_WIDTH_WORLD = GamePanel.toWorldSize(SNAKE_WIDTH);
     private final Color BODY_COLOR = Color.WHITE;
     
     private ArrayList<Vector> bodyNodes;
@@ -151,8 +152,10 @@ public class Snake {
                 g.fillRect(minX, minY, width, height);
             }
         }
+    }
 
-        // Debug Draw - shows nodes
+    // Debug Draw - shows nodes
+    public void debugDraw(Graphics g) {
         for (int i = 0; i < bodyNodes.size(); i++) {
             Vector node = bodyNodes.get(i).toScreenCoords();
 
@@ -173,12 +176,43 @@ public class Snake {
         return (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2);
     }
 
-    public boolean checkIfInside(int x, int y) {
+    private boolean rectContains(int x, int y, int rectX, int rectY, int rectWidth, int rectHeight) {
+        if (rectX <= x && rectX + rectWidth >= x && rectY <= y && rectY + rectHeight >= y) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean contains(int x, int y) {
         for (int i = 0; i < bodyNodes.size(); i++) {
             Vector node = bodyNodes.get(i);
 
-            if ((SNAKE_WIDTH / 2) * (SNAKE_WIDTH / 2) >= squareDisatanceBetweenPoints(node.x, node.y, x, y)) {
+            if ((SNAKE_WIDTH_WORLD / 2) * (SNAKE_WIDTH_WORLD / 2) >= squareDisatanceBetweenPoints(node.x, node.y, x, y)) {
                 return true;
+            }
+
+            if (i != 0) {
+                Vector previousNode = bodyNodes.get(i - 1);
+
+                int height = SNAKE_WIDTH_WORLD;
+                int width  = SNAKE_WIDTH_WORLD;
+                int minX = Math.min(node.x, previousNode.x);
+                int maxX = Math.max(node.x, previousNode.x);
+                int minY = Math.min(node.y, previousNode.y);
+                int maxY = Math.max(node.y, previousNode.y);
+                
+                if (node.x == previousNode.x) {
+                    height = maxY - minY;
+                    minX -= SNAKE_WIDTH_WORLD / 2;
+                }
+                else {
+                    width = maxX - minX;
+                    minY -= SNAKE_WIDTH_WORLD / 2;
+                }
+
+                if (rectContains(x, y, minX, minY, width, height)) {
+                    return true;
+                }
             }
         }
         return false;
