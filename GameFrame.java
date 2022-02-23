@@ -2,12 +2,12 @@ import javax.swing.JFrame;
 
 public class GameFrame extends JFrame {
     public GameFrame() {
-        add(new GamePanel());
-        setTitle("Snake game");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setResizable(false);
-        pack();
-        setVisible(true);
-        setLocationRelativeTo(null);
+        this.add(new GamePanel());
+        this.setTitle("Snake game");
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setResizable(false);
+        this.pack();
+        this.setVisible(true);
+        this.setLocationRelativeTo(null);
     }
 }
