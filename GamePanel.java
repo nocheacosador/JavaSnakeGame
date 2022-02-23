@@ -38,12 +38,12 @@ public class GamePanel extends JPanel implements ActionListener {
     }
     
     static public int toScreenSize(int x) {
-        int x_out = map(x, 0, CELL_COUNT_X * TICK_COUNT, 0, WIDTH);
+        int x_out = x * CELL_SIZE / TICK_COUNT;
         return x_out;
     }
 
     static public int toWorldSize(int x) {
-        int x_out = map(x, 0, WIDTH,  0, CELL_COUNT_X * TICK_COUNT);
+        int x_out = x * TICK_COUNT / CELL_SIZE;
         return x_out;
     }
 
@@ -54,9 +54,23 @@ public class GamePanel extends JPanel implements ActionListener {
         return new Coord(x_out, y_out);
     }
 
+    static public Coord toScreenCoords(Coord coord) {
+        int x_out = map(coord.x, 0, CELL_COUNT_X * TICK_COUNT, 0, WIDTH);
+        int y_out = map(coord.y, 0, CELL_COUNT_Y * TICK_COUNT, 0, HEIGHT);
+
+        return new Coord(x_out, y_out);
+    }
+
     static public Coord toWorldCoords(int x, int y) {
         int x_out = map(x, 0, WIDTH,  0, CELL_COUNT_X * TICK_COUNT);
         int y_out = map(y, 0, HEIGHT, 0, CELL_COUNT_Y * TICK_COUNT);
+
+        return new Coord(x_out, y_out);
+    }
+
+    static public Coord toWorldCoords(Coord coord) {
+        int x_out = map(coord.x, 0, WIDTH,  0, CELL_COUNT_X * TICK_COUNT);
+        int y_out = map(coord.y, 0, HEIGHT, 0, CELL_COUNT_Y * TICK_COUNT);
 
         return new Coord(x_out, y_out);
     }
