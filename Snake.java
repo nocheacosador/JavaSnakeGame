@@ -31,21 +31,20 @@ public class Snake {
         }
     }
     
+    private int speed;                              // world ticks per time tick
     private int length;
-    
-    public int speed;                           // world ticks per time tick
-    public Direction direction;
+    private Direction nextDirection;
+    private ArrayList<Vector> bodyNodes;            // in world coordinates
     
     private final int SNAKE_WIDTH = GamePanel.CELL_SIZE / 2;
     private final int SNAKE_WIDTH_WORLD = GamePanel.toWorldSize(SNAKE_WIDTH);
     private final Color BODY_COLOR = Color.WHITE;
     
-    private ArrayList<Vector> bodyNodes;        // in world coordinates
     
     public Snake() {
         this.length = 3;
         this.speed = 1;
-        this.direction = Direction.Left;
+        this.nextDirection = Direction.Left;
 
         createSnake();
     }
@@ -53,7 +52,7 @@ public class Snake {
     public Snake(int length) {
         this.length = length;
         this.speed = 1;
-        this.direction = Direction.Left;
+        this.nextDirection = Direction.Left;
 
         createSnake();
     }
@@ -72,9 +71,9 @@ public class Snake {
         Vector tail = bodyNodes.get(bodyNodes.size() - 1);
 
         for (int i = 0; i < ticks; i++) {
-            if (head.direction != direction) {
+            if (head.direction != nextDirection) {
                 if (head.x % GamePanel.TICK_COUNT == GamePanel.TICK_COUNT / 2 && head.y % GamePanel.TICK_COUNT == GamePanel.TICK_COUNT / 2) {
-                    head.direction = direction;
+                    head.direction = nextDirection;
 
                     bodyNodes.add(0, new Vector(head));
                     head = bodyNodes.get(0);
@@ -217,6 +216,17 @@ public class Snake {
             }
         }
         return false;
+    }
+
+    public void setDirection(Direction direction) {
+        Direction currentDirection = bodyNodes.get(0).direction;
+
+        if (   (direction == Direction.Up    && currentDirection != Direction.Down)
+            || (direction == Direction.Down  && currentDirection != Direction.Up) 
+            || (direction == Direction.Left  && currentDirection != Direction.Right)
+            || (direction == Direction.Right && currentDirection != Direction.Left)) {
+            nextDirection = direction;
+        }
     }
 
     public int getLength() {

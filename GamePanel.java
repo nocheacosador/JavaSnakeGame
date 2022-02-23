@@ -22,11 +22,16 @@ public class GamePanel extends JPanel implements ActionListener {
     private static final Color BACKGROUND_COLOR_LIGHT = new Color(120, 204, 110);
     private static final Color BACKGROUND_COLOR_DARK = new Color(91, 153, 83);
 
+    private enum GameState {
+        Start, Running, GameOver
+    };
+
     private Timer timer = new Timer(DELAY, this);
     private Snake snake = new Snake();
     private Apple apple = new Apple(snake);
     private long lastTimeStamp = 0;
     private long unaccountedMillis = 0;
+    private GameState gameState = GameState.Start;
 
     static private int map(int x, int in_min, int in_max, int out_min, int out_max) {
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
@@ -62,7 +67,7 @@ public class GamePanel extends JPanel implements ActionListener {
         addKeyListener(new MyKeyAdapder());
 
         timer.start();
-        lastTimeStamp = System.currentTimeMillis();  
+        lastTimeStamp = System.currentTimeMillis();
     }
 
     private void drawBackground(Graphics g) {        
@@ -84,8 +89,10 @@ public class GamePanel extends JPanel implements ActionListener {
         long ticks = (deltaTime + unaccountedMillis) / TIME_TICK_MILLIS;
         unaccountedMillis = (deltaTime + unaccountedMillis) % TIME_TICK_MILLIS;
         
-        snake.update((int)ticks);
-        apple.update();
+        if (gameState == GameState.Running) {
+            snake.update((int)ticks);
+            apple.update();
+        }
 
         this.drawBackground(g);
         snake.draw(g);
@@ -100,27 +107,23 @@ public class GamePanel extends JPanel implements ActionListener {
 
     public class MyKeyAdapder extends KeyAdapter {
         @Override
-        public void keyPressed(KeyEvent e) {    
+        public void keyPressed(KeyEvent e) {
+            if (gameState == GameState.Start) {
+                gameState = GameState.Running;
+                return;
+            }  
             switch (e.getKeyCode()) {
             case KeyEvent.VK_UP:
-                if (snake.direction != Snake.Direction.Down) {
-                    snake.direction = Snake.Direction.Up;
-                }
+                snake.setDirection(Snake.Direction.Up);
                 break;
             case KeyEvent.VK_DOWN:
-                if (snake.direction != Snake.Direction.Up) {
-                    snake.direction = Snake.Direction.Down;
-                }
+                snake.setDirection(Snake.Direction.Down);
                 break;
             case KeyEvent.VK_LEFT:
-                if (snake.direction != Snake.Direction.Right) {
-                    snake.direction = Snake.Direction.Left;
-                }
+                snake.setDirection(Snake.Direction.Left);
                 break;
             case KeyEvent.VK_RIGHT:
-                if (snake.direction != Snake.Direction.Left) {
-                    snake.direction = Snake.Direction.Right;
-                }
+                snake.setDirection(Snake.Direction.Right);
                 break;
             }
         }

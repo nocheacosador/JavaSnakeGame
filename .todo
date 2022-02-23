@@ -3,4 +3,4 @@
 - [] Implement growth if snake eats apple
 - [] Implement death if snake eats itself
 - [] Implement death if snake breaches world border
-- [] Fix issue with snake being able to turn 180 degrees
+- [x] Fix issue with snake being able to turn 180 degrees
