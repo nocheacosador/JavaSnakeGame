@@ -13,10 +13,10 @@ public class Snake {
         public int y;
         public Direction direction;
 
-        public Vector(int positionX, int positionY, Direction d) {
-            x = positionX;
-            y = positionY;
-            direction = d;
+        public Vector(int x, int y, Direction d) {
+            this.x = x;
+            this.y = y;
+            this.direction = d;
         }
 
         public Vector(Vector vec) {
