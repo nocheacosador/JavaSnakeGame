@@ -9,6 +9,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.lang.System;
 
+import java.awt.Point;
+
 public class GamePanel extends JPanel implements ActionListener {
     public static final int CELL_COUNT_Y = 14;
     public static final int CELL_COUNT_X = 14;
@@ -27,7 +29,7 @@ public class GamePanel extends JPanel implements ActionListener {
     };
 
     private Timer timer = new Timer(DELAY, this);
-    private Snake snake = new Snake(5, 5);
+    private Snake snake = new Snake();
     private Apple apple = new Apple(snake);
     private long lastTimeStamp = 0;
     private long unaccountedMillis = 0;
@@ -109,9 +111,9 @@ public class GamePanel extends JPanel implements ActionListener {
         }
 
         this.drawBackground(g);
+        apple.draw(g);
         snake.draw(g);
         snake.debugDraw(g);
-        apple.draw(g);
     }
 
     @Override

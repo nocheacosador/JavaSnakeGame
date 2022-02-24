@@ -11,10 +11,11 @@ public class Apple {
     
     private final Color color = Color.RED;
     private final int APPLE_RADIUS = GamePanel.CELL_SIZE / 3;
+    private final int APPLE_RADIUS_WORLD = GamePanel.toWorldSize(APPLE_RADIUS);
 
     public Apple(Snake snake) {
         this.snake = snake;
-        newPosition();
+        this.newPosition();
     }
 
     private void newPosition() {
@@ -28,8 +29,10 @@ public class Apple {
     }
 
     public void update() {
-        if (snake.contains(this.x, this.y)) {
-            newPosition();
+        CircleBound bound = new CircleBound(this.x, this.y, APPLE_RADIUS_WORLD);
+        if (bound.contains(snake.getNoseCoord())) {
+            this.newPosition();
+            //snake.grow();
         }
     }
 

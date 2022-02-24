@@ -33,10 +33,11 @@ public class Snake extends Bound {
         }
     }
     
-    private int speed;                              // world ticks per time tick
-    private int length;
-    private Direction nextDirection;
-    private ArrayList<Vector> bodyNodes;            // in world coordinates
+    private int speed = 2;                              // world ticks per time tick
+    private int length = 3 * GamePanel.TICK_COUNT;
+    private int shouldGrow = 0;
+    private Direction nextDirection = Direction.Left;
+    private ArrayList<Vector> bodyNodes;                // in world coordinates
     
     private final int SNAKE_WIDTH = GamePanel.CELL_SIZE / 2;
     private final int SNAKE_WIDTH_WORLD = GamePanel.toWorldSize(SNAKE_WIDTH);
@@ -44,17 +45,12 @@ public class Snake extends Bound {
     
     
     public Snake() {
-        this.length = 3;
-        this.speed = 5;
-        this.nextDirection = Direction.Left;
-
         createSnake();
     }
 
     public Snake(int length, int speed) {
         this.length = length;
         this.speed = speed;
-        this.nextDirection = Direction.Left;
 
         createSnake();
     }
@@ -65,7 +61,7 @@ public class Snake extends Bound {
         int y = GamePanel.CELL_COUNT_Y / 2 * GamePanel.TICK_COUNT + GamePanel.TICK_COUNT / 2;
         
         bodyNodes.add(new Vector(x, y, Direction.Left));
-        bodyNodes.add(new Vector(x + GamePanel.TICK_COUNT * (length - 1), y, Direction.Left));
+        bodyNodes.add(new Vector(x + length, y, Direction.Left));
     }
 
     public void update(int ticks) {
@@ -164,10 +160,8 @@ public class Snake extends Bound {
         for (int i = 0; i < bodyNodes.size(); i++) {
             Vector node = bodyNodes.get(i).toScreenCoords();
 
-            g.setColor(Color.ORANGE);
-            g.fillOval(node.position.x - SNAKE_WIDTH / 4, node.position.y - SNAKE_WIDTH / 4, SNAKE_WIDTH / 2, SNAKE_WIDTH / 2);
-            g.setColor(Color.BLACK);
-            g.drawOval(node.position.x - SNAKE_WIDTH / 4, node.position.y - SNAKE_WIDTH / 4, SNAKE_WIDTH / 2, SNAKE_WIDTH / 2);
+            g.setColor(Color.MAGENTA);
+            g.fillOval(node.position.x - 4, node.position.y - 4, 8, 8);
             
             if (i != 0) {
                 Vector previousNode = bodyNodes.get(i - 1).toScreenCoords();
@@ -178,7 +172,7 @@ public class Snake extends Bound {
 
         // draw nose
         Coord nose = GamePanel.toScreenCoords(this.getNoseCoord());
-        g.setColor(Color.RED);
+        g.setColor(Color.CYAN);
         g.fillOval(nose.x - 4, nose.y - 4, 8, 8);
     }
 
@@ -255,5 +249,9 @@ public class Snake extends Bound {
 
     public int getLength() {
         return length;
+    }
+
+    public void grow() {
+        shouldGrow += GamePanel.TICK_COUNT;
     }
 }
