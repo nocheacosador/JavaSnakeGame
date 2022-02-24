@@ -32,7 +32,7 @@ public class Apple {
         CircleBound bound = new CircleBound(this.x, this.y, APPLE_RADIUS_WORLD);
         if (bound.contains(snake.getNoseCoord())) {
             this.newPosition();
-            //snake.grow();
+            snake.grow();
         }
     }
 

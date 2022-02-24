@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.awt.Graphics;
 import java.awt.Color;
 import java.lang.Math;
+import java.lang.System;
 
 public class Snake extends Bound {
     public enum Direction {
@@ -38,11 +39,13 @@ public class Snake extends Bound {
     private int shouldGrow = 0;
     private Direction nextDirection = Direction.Left;
     private ArrayList<Vector> bodyNodes;                // in world coordinates
+
+    private Callback onGrowthCallback = null;
+    private Callback onDeathCallback = null;
     
     private final int SNAKE_WIDTH = GamePanel.CELL_SIZE / 2;
     private final int SNAKE_WIDTH_WORLD = GamePanel.toWorldSize(SNAKE_WIDTH);
     private final Color BODY_COLOR = Color.WHITE;
-    
     
     public Snake() {
         createSnake();
@@ -68,7 +71,8 @@ public class Snake extends Bound {
         Vector head = bodyNodes.get(0);
         Vector tail = bodyNodes.get(bodyNodes.size() - 1);
 
-        for (int i = 0; i < ticks; i++) {
+        // move
+        for (int i = 0; i < ticks * speed; i++) {
             if (head.direction != nextDirection) {
                 if (   head.position.x % GamePanel.TICK_COUNT == GamePanel.TICK_COUNT / 2 
                     && head.position.y % GamePanel.TICK_COUNT == GamePanel.TICK_COUNT / 2)
@@ -82,21 +86,26 @@ public class Snake extends Bound {
 
             switch (head.direction) {
             case Up:
-                head.position.y -= speed;
+                head.position.y -= 1;
                 break;
             case Down:
-                head.position.y += speed;
+                head.position.y += 1;
                 break;
             case Left:
-                head.position.x -= speed;
+                head.position.x -= 1;
                 break;
             case Right:
-                head.position.x += speed;
+                head.position.x += 1;
                 break;
             }
 
             if (bodyNodes.size() < 2) {
                 throw new RuntimeException("Snake size is less than 2.");
+            }
+            
+            if (shouldGrow > 0 ) {
+                shouldGrow--;
+                continue;
             }
             
             Vector pretail = bodyNodes.get(bodyNodes.size() - 2);
@@ -108,18 +117,24 @@ public class Snake extends Bound {
 
             switch (tail.direction) {
             case Up:
-                tail.position.y -= speed;
+                tail.position.y -= 1;
                 break;
             case Down:
-                tail.position.y += speed;
+                tail.position.y += 1;
                 break;
             case Left:
-                tail.position.x -= speed;
+                tail.position.x -= 1;
                 break;
             case Right:
-                tail.position.x += speed;
+                tail.position.x += 1;
                 break;
             }
+        }
+
+        // check if ate itself
+        if (this.contains(this.getNoseCoord())) {
+            System.out.println("Snake should die!");
+            if (onDeathCallback != null) onDeathCallback.call();
         }
     }
 
@@ -231,16 +246,16 @@ public class Snake extends Bound {
 
         switch (head.direction) {
         case Up:
-            nose.y -= SNAKE_WIDTH_WORLD / 2;
+            nose.y -= SNAKE_WIDTH_WORLD / 2 + 1;
             break;
         case Down:
-            nose.y += SNAKE_WIDTH_WORLD / 2;
+            nose.y += SNAKE_WIDTH_WORLD / 2 + 1;
             break;
         case Right:
-            nose.x += SNAKE_WIDTH_WORLD / 2;
+            nose.x += SNAKE_WIDTH_WORLD / 2 + 1;
             break;
         case Left:
-            nose.x -= SNAKE_WIDTH_WORLD / 2;
+            nose.x -= SNAKE_WIDTH_WORLD / 2 + 1;
             break;
         }
 
@@ -253,5 +268,14 @@ public class Snake extends Bound {
 
     public void grow() {
         shouldGrow += GamePanel.TICK_COUNT;
+        if (onGrowthCallback != null) onGrowthCallback.call();
+    }
+
+    public void onGrowth(Callback callback) {
+        this.onGrowthCallback = callback;
+    }
+
+    public void onDeath(Callback callback) {
+        this.onDeathCallback = callback;
     }
 }

@@ -1,6 +1,6 @@
 - [] Implement start game menu
 - [] Implement game over menu
-- [] Implement growth if snake eats apple
-- [] Implement death if snake eats itself
+- [x] Implement growth if snake eats apple
+- [x] Implement death if snake eats itself
 - [] Implement death if snake breaches world border
 - [x] Fix issue with snake being able to turn 180 degrees

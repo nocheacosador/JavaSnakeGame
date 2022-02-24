@@ -9,8 +9,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.lang.System;
 
-import java.awt.Point;
-
 public class GamePanel extends JPanel implements ActionListener {
     public static final int CELL_COUNT_Y = 14;
     public static final int CELL_COUNT_X = 14;
@@ -25,7 +23,7 @@ public class GamePanel extends JPanel implements ActionListener {
     private static final Color BACKGROUND_COLOR_DARK = new Color(91, 153, 83);
 
     private enum GameState {
-        Start, Running, GameOver
+        Start, Running, Paused, GameOver
     };
 
     private Timer timer = new Timer(DELAY, this);
@@ -78,9 +76,24 @@ public class GamePanel extends JPanel implements ActionListener {
     }
 
     public GamePanel() {
-        setPreferredSize(new Dimension(WIDTH, HEIGHT));
-        setFocusable(true);
-        addKeyListener(new MyKeyAdapder());
+        this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+        this.setFocusable(true);
+        this.addKeyListener(new MyKeyAdapder());
+
+        snake.onGrowth(new Callback() {
+            @Override
+            public void call() {
+                System.out.println("Snake has grown.");
+            }
+        });
+
+        snake.onDeath(new Callback() {
+            @Override
+            public void call() {
+                gameState = GameState.GameOver;
+                System.out.println("Snake is dead.");
+            }
+        });
 
         timer.start();
         lastTimeStamp = System.currentTimeMillis();
@@ -118,13 +131,13 @@ public class GamePanel extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        repaint();
+        this.repaint();
     }
 
     public class MyKeyAdapder extends KeyAdapter {
         @Override
         public void keyPressed(KeyEvent e) {
-            if (gameState == GameState.Start) {
+            if (gameState == GameState.Start || gameState == GameState.Paused) {
                 gameState = GameState.Running;
                 return;
             }  
@@ -140,6 +153,9 @@ public class GamePanel extends JPanel implements ActionListener {
                 break;
             case KeyEvent.VK_RIGHT:
                 snake.setDirection(Snake.Direction.Right);
+                break;
+            case KeyEvent.VK_P:
+                gameState = GameState.Paused;
                 break;
             }
         }
