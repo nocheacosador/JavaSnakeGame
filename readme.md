@@ -2,6 +2,7 @@
 This is my first Java program.
 ## Build & Run
 ```
-./build.bat
-./run.bat
+javac -d build *.java
+cd build
+java Main
 ```
