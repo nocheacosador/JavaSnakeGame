@@ -45,15 +45,15 @@ public class Snake extends Bound {
     
     public Snake() {
         this.length = 3;
-        this.speed = 1;
+        this.speed = 5;
         this.nextDirection = Direction.Left;
 
         createSnake();
     }
 
-    public Snake(int length) {
+    public Snake(int length, int speed) {
         this.length = length;
-        this.speed = 1;
+        this.speed = speed;
         this.nextDirection = Direction.Left;
 
         createSnake();
@@ -160,6 +160,7 @@ public class Snake extends Bound {
 
     // Debug Draw - shows nodes
     public void debugDraw(Graphics g) {
+        // draw body nodes        
         for (int i = 0; i < bodyNodes.size(); i++) {
             Vector node = bodyNodes.get(i).toScreenCoords();
 
@@ -174,6 +175,11 @@ public class Snake extends Bound {
                 g.drawLine(previousNode.position.x, previousNode.position.y, node.position.x, node.position.y);
             }
         }
+
+        // draw nose
+        Coord nose = GamePanel.toScreenCoords(this.getNoseCoord());
+        g.setColor(Color.RED);
+        g.fillOval(nose.x - 4, nose.y - 4, 8, 8);
     }
 
     @Override
@@ -223,6 +229,28 @@ public class Snake extends Bound {
             || (direction == Direction.Right && currentDirection != Direction.Left)) {
             nextDirection = direction;
         }
+    }
+
+    public Coord getNoseCoord() {
+        Vector head = bodyNodes.get(0);
+        Coord nose = new Coord(head.position);
+
+        switch (head.direction) {
+        case Up:
+            nose.y -= SNAKE_WIDTH_WORLD / 2;
+            break;
+        case Down:
+            nose.y += SNAKE_WIDTH_WORLD / 2;
+            break;
+        case Right:
+            nose.x += SNAKE_WIDTH_WORLD / 2;
+            break;
+        case Left:
+            nose.x -= SNAKE_WIDTH_WORLD / 2;
+            break;
+        }
+
+        return nose;
     }
 
     public int getLength() {

@@ -13,8 +13,8 @@ public class GamePanel extends JPanel implements ActionListener {
     public static final int CELL_COUNT_Y = 14;
     public static final int CELL_COUNT_X = 14;
     public static final int CELL_SIZE = 50;
-    public static final int TICK_COUNT = 100;
-    public static final int TIME_TICK_MILLIS = 5;
+    public static final int TICK_COUNT = 200;
+    public static final int TIME_TICK_MILLIS = 10;
     public static final int WIDTH = CELL_COUNT_X * CELL_SIZE;
     public static final int HEIGHT = CELL_COUNT_Y * CELL_SIZE;
     private static final int DELAY = 40;
@@ -27,7 +27,7 @@ public class GamePanel extends JPanel implements ActionListener {
     };
 
     private Timer timer = new Timer(DELAY, this);
-    private Snake snake = new Snake();
+    private Snake snake = new Snake(5, 5);
     private Apple apple = new Apple(snake);
     private long lastTimeStamp = 0;
     private long unaccountedMillis = 0;
