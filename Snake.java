@@ -133,7 +133,14 @@ public class Snake extends Bound {
 
         // check if ate itself
         if (this.contains(this.getNoseCoord())) {
-            System.out.println("Snake should die!");
+            System.out.println("Snake ate itself. Snake should die!");
+            if (onDeathCallback != null) onDeathCallback.call();
+        }
+
+        // check world border
+        RectBound rectBound = new RectBound(0, 0, GamePanel.CELL_COUNT_X * GamePanel.TICK_COUNT, GamePanel.CELL_COUNT_Y * GamePanel.TICK_COUNT);
+        if (!rectBound.contains(this.getNoseCoord())) {
+            System.out.println("Snake crossed border. Nuke the snake!");
             if (onDeathCallback != null) onDeathCallback.call();
         }
     }
