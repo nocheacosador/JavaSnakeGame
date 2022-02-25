@@ -126,7 +126,7 @@ public class GamePanel extends JPanel implements ActionListener {
         this.drawBackground(g);
         apple.draw(g);
         snake.draw(g);
-        snake.debugDraw(g);
+        //snake.debugDraw(g);
     }
 
     @Override

@@ -34,7 +34,7 @@ public class Snake extends Bound {
         }
     }
     
-    private int speed = 2;                              // world ticks per time tick
+    private int speed = 4;                              // world ticks per time tick
     private int length = 3 * GamePanel.TICK_COUNT;
     private int shouldGrow = 0;
     private Direction nextDirection = Direction.Left;
@@ -105,6 +105,7 @@ public class Snake extends Bound {
             
             if (shouldGrow > 0 ) {
                 shouldGrow--;
+                length++;
                 continue;
             }
             
