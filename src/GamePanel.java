@@ -1,11 +1,13 @@
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import javax.swing.plaf.FontUIResource;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.Graphics;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Dimension;
 import java.lang.System;
 
@@ -17,10 +19,12 @@ public class GamePanel extends JPanel implements ActionListener {
     public static final int TIME_TICK_MILLIS = 10;
     public static final int WIDTH = CELL_COUNT_X * CELL_SIZE;
     public static final int HEIGHT = CELL_COUNT_Y * CELL_SIZE;
-    private static final int DELAY = 40;
     
-    private static final Color BACKGROUND_COLOR_LIGHT = new Color(120, 204, 110);
-    private static final Color BACKGROUND_COLOR_DARK = new Color(91, 153, 83);
+    private final int DELAY = 40;
+    private final Color BACKGROUND_COLOR_LIGHT = new Color(120, 204, 110);
+    private final Color BACKGROUND_COLOR_DARK = new Color(91, 153, 83);
+
+    private final Font TITLE_FONT = new FontUIResource(Font.SANS_SERIF, 0, 75);
 
     private enum GameState {
         Start, Running, Paused, GameOver
@@ -124,9 +128,17 @@ public class GamePanel extends JPanel implements ActionListener {
         }
 
         this.drawBackground(g);
-        apple.draw(g);
-        snake.draw(g);
-        //snake.debugDraw(g);
+        
+        if (gameState == GameState.Start) {
+            g.setColor(Color.WHITE);
+            g.setFont(TITLE_FONT);
+            g.drawChars("Snake Game".toCharArray(), 0, 10, 100, 100);
+        }
+        else {
+            apple.draw(g);
+            snake.draw(g);
+            //snake.debugDraw(g);
+        }
     }
 
     @Override
